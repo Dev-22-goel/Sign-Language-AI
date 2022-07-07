@@ -23,7 +23,7 @@ The following **required** functionality is completed:
 * [x] Program can **detect those saved gestures even after restart**
 * [x] Program can **Shows gesture text and countdown on screen** 
 * [x] User can **See the current FPS on the right top of the screen**
-* [x] User can **Safely exit the program** 
+* [x] User can **Safely exit the program by pressing 'q'** 
 
 
 Here's a walkthrough of implemented user stories:
