@@ -1,6 +1,6 @@
 # Sign-Language-AI (Group Project) 
 
-- Collaboated with **Ashmika Ballamudi** and **Vi Nguyen**
+- Collaborated with **Ashmika Ballamudi** and **Vi Nguyen**
 
 Created a Live Hand Detection program which understands ASL language. This tool is completely user friendly. It helps to detect ASL patterns which can be trained by the user OR the user can also load files having that gestures into the program. This is comparitively faster and way more optimized than the current solutions available on the web world.
 
@@ -49,6 +49,8 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 It was great to use different libraries like opencv, tensorflow, mediapipe, pycaw, numpy and my very own **personal hand detection file.** Strong efforts by other team members made me accomplish this difficult task. It was fun and tough but we did not lose hope till the end.
+
+**I would like to give a special thanks to Google. Youtubers, professors and reasearchers who gave their valuable knowledge to us and helped us successfully achieve this great program.**
 
 ## License
 
