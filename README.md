@@ -28,19 +28,19 @@ The following **required** functionality is completed:
 
 Here's a walkthrough of implemented user stories:
 
-## Video Walkthrough **Training**
+##Walkthrough 1: **Training**
 
 <img src='training.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-## Video Walkthrough **Capturing**
+##Walkthrough 2: **Capturing**
 
 <img src='capturing.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-## Video Walkthrough **Detecting**
+##Walkthrough 3: **Detecting**
 
 <img src='detecting.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-## Video Walkthrough **Restarting and Successful Detection**
+##Walkthrough 4: **Restarting and Successful Detection**
 
 <img src='restarting.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
