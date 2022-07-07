@@ -6,7 +6,7 @@ Created a Live Hand Detection program which understands ASL language. This tool 
 
 This is based on using some well-known data structures like arrays, maps and tuples. For simplicity of gesture capturing, the program is enabled with a countdown timer to give the user more flexibiltiy in getting ready for a camershot!🤳🤳✨ 
 
-**Sign Language Detection** is a python software which is designed to detect hand movements and patterns. This can help in understanding and conversing with those children who cannot hear (We are working on adding a feature of out voice command which can further help to communicate with people who cannot see).
+**Sign Language Detection** is a python software which is designed to detect hand movements and patterns. This can help in understanding and conversing with those children who cannot hear (We are working on adding a feature of out voice command which can further help to communicate with people who cannot see). The best part i it is not only specific to a particular person it works for everyone and gives nearly 100% accurate detections. It is independent on how far the hand is while capturing or detection.
 
 Submitted by: **Devansh Goel**
 
