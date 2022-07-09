@@ -3,7 +3,9 @@ import cv2
 import numpy as np
 import pickle
 
+
 class mpHands:
+
     import mediapipe as mp
     def __init__(self,maxHands=2,tol1=.5,tol2=.5):
         self.hands=self.mp.solutions.hands.Hands(False,maxHands,tol1,tol2)
@@ -59,11 +61,9 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,height)
 cam.set(cv2.CAP_PROP_FPS, 30)
 cam.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'))
-findHands=mpHands(1)
+findHands=mpHands(2)
 time.sleep(5)
-
 keyPoints=[0,4,5,9,13,17,8,12,16,20]
-# keyPoints=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
 train=int(input('Enter 1 to Train, Enter 0 to Recognize '))
 if train==1:

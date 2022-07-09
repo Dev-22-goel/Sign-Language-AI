@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 
 class mpHands:
+
     import mediapipe as mp
     def __init__(self,maxHands=2,tol1=.5,tol2=.5):
         self.hands=self.mp.solutions.hands.Hands(False,maxHands,tol1,tol2)
@@ -18,37 +19,60 @@ class mpHands:
                 for landMark in handLandMarks.landmark:
                     myHand.append((int(landMark.x*width),int(landMark.y*height)))
                 myHands.append(myHand)
+
         return myHands
 def findDistances(handData):
-    distMatrix=np.zeros([len(handData),len(handData)],dtype='float')
-    palmSize=((handData[0][0]-handData[9][0])**2+(handData[0][1]-handData[9][1])**2)**(1./2.)
-    for row in range(0,len(handData)):
-        for column in range(0,len(handData)):
-            distMatrix[row][column]=(((handData[row][0]-handData[column][0])**2+(handData[row][1]-handData[column][1])**2)**(1./2.))/palmSize
+
+    distMatrix = np.zeros([len(handData), len(handData[0]), len(handData[0])], dtype='float')
+    for i in range(0, len(handData)):
+
+        palmSize=((handData[i][0][0]-handData[i][9][0])**2+(handData[i][0][1]-handData[i][9][1])**2)**(1./2.)
+        for row in range(0,len(handData[i])):
+            for column in range(0,len(handData[i])):
+                distMatrix[i][row][column]=(((handData[i][row][0]-handData[i][column][0])**2+(handData[i][row][1]-handData[i][column][1])**2)**(1./2.))/palmSize
+
     return distMatrix
 
 def findError(gestureMatrix,unknownMatrix,keyPoints):
     error=0
-    for row in keyPoints:
-        for column in keyPoints:
-            error=error+abs(gestureMatrix[row][column]-unknownMatrix[row][column])
+    handLen = len(gestureMatrix)
+    for i in range(0,handLen):
+        for row in keyPoints:
+            for column in keyPoints:
+                error = error + abs(gestureMatrix[i][row][column] - unknownMatrix[i][row][column])
+    if handLen == 2:
+        error = error/2
     print(error)
     return error
 def findGesture(unknownGesture,knownGestures,keyPoints,gestNames,tol):
+
     errorArray=[]
     for i in range(0,len(gestNames),1):
-        error=findError(knownGestures[i],unknownGesture,keyPoints)
+        if len(knownGestures[i]) == len(unknownGesture):
+            error=findError(knownGestures[i],unknownGesture,keyPoints)
+        else:
+            error = -1
         errorArray.append(error)
-    errorMin=errorArray[0]
-    minIndex=0
-    for i in range(0,len(errorArray),1):
-        if errorArray[i]<errorMin:
-            errorMin=errorArray[i]
-            minIndex=i
-    if errorMin<tol:
-        gesture=gestNames[minIndex]
-    if errorMin>=tol:
-        gesture='Unknown'
+    j = 0
+    errorMin = -1
+    while j < len(errorArray):
+        if errorArray[j]!=-1:
+            errorMin = errorArray[j]
+            minIndex = j
+
+            break;
+        j += 1
+    if (errorMin == -1):
+        gesture = 'unknown'
+    else:
+        for i in range(j,len(errorArray),1):
+            if error != -1 and errorArray[i]<errorMin:
+                errorMin=errorArray[i]
+                minIndex=i
+        if errorMin<tol:
+            gesture=gestNames[minIndex]
+        if errorMin>=tol:
+            gesture='Unknown'
     return gesture
 
 
@@ -59,11 +83,9 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,height)
 cam.set(cv2.CAP_PROP_FPS, 30)
 cam.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'))
-findHands=mpHands(1)
+findHands=mpHands(2)
 time.sleep(5)
-
 keyPoints=[0,4,5,9,13,17,8,12,16,20]
-# keyPoints=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
 train=int(input('Enter 1 to Train, Enter 0 to Recognize '))
 if train==1:
@@ -122,7 +144,7 @@ while True:
                 else:
                     ignore, frame = cam.read()
                     frame = cv2.resize(frame, (width, height))
-                    knownGesture=findDistances(handData[0])
+                    knownGesture=findDistances(handData)
                     knownGestures.append(knownGesture)
                     trainCnt=trainCnt+1
                     if trainCnt==numGest:
@@ -133,7 +155,7 @@ while True:
                 TIMER = int(3)
     if train == 0:
         if handData!=[]:
-            unknownGesture=findDistances(handData[0])
+            unknownGesture=findDistances(handData)
             myGesture=findGesture(unknownGesture,knownGestures,keyPoints,gestNames,tol)
             #error=findError(knownGesture,unknownGesture,keyPoints)
             cv2.putText(frame,myGesture,(100,175),cv2.FONT_HERSHEY_SIMPLEX,3,(255,0,0),8)

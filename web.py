@@ -7,7 +7,6 @@ class mpHands:
     import mediapipe as mp
     def __init__(self,maxHands=2,tol1=.5,tol2=.5):
         self.hands=self.mp.solutions.hands.Hands(False,maxHands,tol1,tol2)
-
     def Marks(self,frame):
         myHands=[]
         frameRGB=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
@@ -54,16 +53,14 @@ def findGesture(unknownGesture,knownGestures,keyPoints,gestNames,tol):
 
 width=1280
 height=720
-cam=cv2.VideoCapture(0)
+cam=cv2.VideoCapture(0,cv2.CAP_DSHOW)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,height)
 cam.set(cv2.CAP_PROP_FPS, 30)
 cam.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'))
 findHands=mpHands(1)
 time.sleep(5)
-
 keyPoints=[0,4,5,9,13,17,8,12,16,20]
-# keyPoints=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
 train=int(input('Enter 1 to Train, Enter 0 to Recognize '))
 if train==1:
@@ -90,7 +87,7 @@ if train==0:
         knownGestures=pickle.load(f)
 
 tol=10
-TIMER = int(3)
+
 while True:
     ignore,  frame = cam.read()
     frame=cv2.resize(frame,(width,height))
@@ -98,39 +95,15 @@ while True:
     if train==1:
         if handData!=[]:
             print('Please Show Gesture ',gestNames[trainCnt],': Press t when Ready')
-            k = cv2.waitKey(125)
-            if k == ord('t'):
-                prev = time.time()
-                while TIMER >=0:
-                    ignore,frame = cam.read()
-                    frame = cv2.resize(frame, (width, height))
-                    handData = findHands.Marks(frame)
-                    for hand in handData:
-                        for ind in keyPoints:
-                            cv2.circle(frame, hand[ind], 25, (255, 0, 255), 3)
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    cv2.putText(frame, str(TIMER),
-                                (200, 250), font,
-                                7, (0, 0, 255),
-                                4, cv2.LINE_AA)
-                    cv2.imshow('my WEBcam', frame)
-                    cv2.waitKey(125)
-                    cur = time.time()
-                    if cur - prev >= 1:
-                        prev = cur
-                        TIMER = TIMER - 1
-                else:
-                    ignore, frame = cam.read()
-                    frame = cv2.resize(frame, (width, height))
-                    knownGesture=findDistances(handData[0])
-                    knownGestures.append(knownGesture)
-                    trainCnt=trainCnt+1
-                    if trainCnt==numGest:
-                        train=0
-                        with open(trainName,'wb') as f:
-                            pickle.dump(gestNames,f)
-                            pickle.dump(knownGestures,f)
-                TIMER = int(3)
+            if cv2.waitKey(1) & 0xff==ord('t'):
+                knownGesture=findDistances(handData[0])
+                knownGestures.append(knownGesture)
+                trainCnt=trainCnt+1
+                if trainCnt==numGest:
+                    train=0
+                    with open(trainName,'wb') as f:
+                        pickle.dump(gestNames,f)
+                        pickle.dump(knownGestures,f)
     if train == 0:
         if handData!=[]:
             unknownGesture=findDistances(handData[0])
